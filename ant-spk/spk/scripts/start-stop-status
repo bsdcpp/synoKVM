@@ -1,0 +1,68 @@
+#!/bin/sh
+# Copyright (C) 2000-2016 Synology Inc. All rights reserved.
+
+insert_kernel_modules()
+{
+	insmod /lib/modules/kvm.ko
+    it=`grep vmx /proc/cpuinfo`
+    amd=`grep svm /proc/cpuinfo`
+    if [ ! -z "${it}" ]; then
+        insmod /lib/modules/kvm-intel.ko
+    elif [ ! -z "${amd}" ]; then
+        insmod /lib/modules/kvm-amd.ko
+    else
+        echo 0
+    fi
+	insmod /lib/modules/tun.ko
+	insmod /lib/modules/vhost_net.ko
+}
+remove_kernel_modules()
+{
+	rmmod vhost_net
+	rmmod tun
+	it=`grep vmx /proc/cpuinfo`
+	amd=`grep svm /proc/cpuinfo`
+	if [ ! -z "${it}" ]; then
+		rmmod kvm_intel
+	elif [ ! -z "${amd}" ]; then
+		rmmod kvm_amd
+	else
+		echo 0
+	fi
+	rmmod kvm
+}
+
+case $1 in
+	start)
+		ret=`insert_kernel_modules`
+		if [ "$ret" != "0" ]; then
+			export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+			virtlogd -d
+			libvirtd -l -d -f /usr/local/etc/libvirt/libvirtd.conf
+			exit 0
+		else
+			exit 1
+		fi
+		;;
+	stop)
+		killall libvirtd
+		killall virtlogd
+		remove_kernel_modules
+		exit 0
+		;;
+	status)
+		if [ -f "/usr/local/var/run/virtlogd.pid" -a -f "/usr/local/var/run/libvirtd.pid" ]; then
+			exit 0
+		else
+			exit 1
+		fi
+		;;
+	killall)
+		killall libvirtd
+		killall virtlogd
+		remove_kernel_modules
+		;;
+	log)
+		exit 0
+		;;
+esac

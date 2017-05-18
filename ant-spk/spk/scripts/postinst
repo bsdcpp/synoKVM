@@ -1,0 +1,37 @@
+#!/bin/sh
+# Copyright (C) 2000-2016 Synology Inc. All rights reserved.
+
+p_dir()
+{
+	[ -d "$1" ] || mkdir -p $1
+}
+
+p_dir /usr/local/bin
+p_dir /usr/local/sbin
+p_dir /usr/local/lib
+p_dir /usr/local/libexec
+p_dir /usr/local/share
+p_dir /usr/local/etc
+p_dir /usr/local/var
+p_dir /usr/local/etc/logrotate.d
+p_dir /usr/local/var/cache/
+p_dir /usr/local/var/lib/
+p_dir /usr/local/var/log
+p_dir /usr/local/var/run
+
+
+ln -sf $SYNOPKG_PKGDEST/bin/* /usr/local/bin
+ln -sf $SYNOPKG_PKGDEST/sbin/* /usr/local/sbin
+ln -sf $SYNOPKG_PKGDEST/lib/* /usr/local/lib/
+ln -sf $SYNOPKG_PKGDEST/libexec/* /usr/local/libexec/
+ln -sf $SYNOPKG_PKGDEST/share/* /usr/local/share/
+
+ln -sf $SYNOPKG_PKGDEST/etc/libvirt /usr/local/etc/
+ln -sf $SYNOPKG_PKGDEST/etc/sasl2 /usr/local/etc/
+ln -sf $SYNOPKG_PKGDEST/etc/logrotate.d/libvirtd /usr/local/etc/logrotate.d/
+
+ln -sf $SYNOPKG_PKGDEST/var/cache/*  /usr/local/var/cache/
+ln -sf $SYNOPKG_PKGDEST/var/lib/*    /usr/local/var/lib/
+ln -sf $SYNOPKG_PKGDEST/var/log/*    /usr/local/var/log/
+ln -sf $SYNOPKG_PKGDEST/var/run/*    /usr/local/var/run/
+exit 0
