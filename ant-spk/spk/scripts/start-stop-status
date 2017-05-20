@@ -37,6 +37,7 @@ case $1 in
 		ret=`insert_kernel_modules`
 		if [ "$ret" != "0" ]; then
 			export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+            echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib' >> /root/.profile
 			virtlogd -d
 			libvirtd -l -d -f /usr/local/etc/libvirt/libvirtd.conf
 			exit 0
