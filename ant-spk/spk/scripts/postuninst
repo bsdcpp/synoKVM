@@ -1,6 +1,8 @@
 #!/bin/sh
 # Copyright (C) 2000-2016 Synology Inc. All rights reserved.
 
+sed -i 's/export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:\/usr\/local\/lib//g' /root/.profile
+
 find /usr/local/ -type l -ls |grep synokvm |awk -F"->" '{print $1}'|awk '{print $NF}'|xargs rm -f
 
 exit 0

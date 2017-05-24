@@ -1,24 +1,58 @@
 #!/bin/sh
 # Copyright (C) 2000-2016 Synology Inc. All rights reserved.
 
+
+insert_module()
+{
+	local module=$1
+	local symbol=$2
+	if ! /sbin/lsmod | grep -q "\<${symbol}\>"; then
+		if [ "xkvm_intel" == "x${symbol}" ]; then
+			/sbin/insmod /lib/modules/kvm-intel.ko nested=1 enable_apicv=0 || \
+				( /usr/bin/logger -p err "Failed to insert ${module}, stop"; false )
+		else
+			/sbin/insmod /lib/modules/${module} || \
+				( /usr/bin/logger -p err "Failed to insert ${module}, stop"; false )
+		fi
+	else
+		true
+	fi
+}
+
 insert_kernel_modules()
 {
-	insmod /lib/modules/kvm.ko
+	insert_module kvm.ko kvm
     it=`grep vmx /proc/cpuinfo`
     amd=`grep svm /proc/cpuinfo`
     if [ ! -z "${it}" ]; then
-        insmod /lib/modules/kvm-intel.ko
+		insert_module kvm-intel.ko kvm_intel
     elif [ ! -z "${amd}" ]; then
-        insmod /lib/modules/kvm-amd.ko
+		insert_module kvm-amd.ko kvm_amd
     else
         echo 0
     fi
-	insmod /lib/modules/tun.ko
-	insmod /lib/modules/vhost_net.ko
+
+	insert_module vhost.ko vhost
+	insert_module tun.ko tun
+	insert_module vhost_net.ko vhost_net
+	# vhost_scsi.ko were inserted in synoiscsiep
+	insert_module pci-stub.ko pci_stub
+
+	/usr/syno/bin/synoiscsiep --insmod vhost
+	/usr/syno/bin/synoiscsiep --insmod loopback
+	/usr/syno/bin/synoiscsiep --startall loopback
+	/usr/syno/bin/synoiscsiep --startall vhost-scsi
 }
 remove_kernel_modules()
 {
+	/usr/syno/bin/synoiscsiep --stopall loopback
+	/usr/syno/bin/synoiscsiep --rmmod loopback
+	/usr/syno/bin/synoiscsiep --stopall vhost-scsi
+	/usr/syno/bin/synoiscsiep --rmmod vhost
+
+	rmmod pci_stub
 	rmmod vhost_net
+	rmmod vhost
 	rmmod tun
 	it=`grep vmx /proc/cpuinfo`
 	amd=`grep svm /proc/cpuinfo`
@@ -37,7 +71,6 @@ case $1 in
 		ret=`insert_kernel_modules`
 		if [ "$ret" != "0" ]; then
 			export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-            echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib' >> /root/.profile
 			virtlogd -d
 			libvirtd -l -d -f /usr/local/etc/libvirt/libvirtd.conf
 			exit 0

@@ -2,10 +2,10 @@
 <project name="Ant SPK Task" basedir="." default="spk" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:syno="antlib:net.filebot.ant.spk">
 
 	<property name="package" value="synokvm" />
-	<property name="version" value="1.0" />
+	<property name="version" value="1.2" />
 
 	<target name="spk" description="Build SPK package">
-		<syno:spk destdir="dist" name="${package}" version="${version}" arch="noarch" compression="gzip">
+		<syno:spk destdir="dist" name="${package}" version="${version}" arch="x86_64" compression="gzip">
 			<info name="displayname" value="SynoKVM" />
 			<info name="description" value="libvirt, kvm for synology DSM" />
 
@@ -25,8 +25,8 @@
 
 		<syno:package-source file="dist/spksrc.json">
 			<keyring file="gpg/alice.pub" />
-			<spk file="dist/${package}-${version}-noarch.spk">
-				<info name="link" value="http://packages.example.org/${package}-${version}-noarch.spk" />
+			<spk file="dist/${package}-${version}-x86_64.spk">
+				<info name="link" value="http://packages.example.org/${package}-${version}-x86_64.spk" />
 				<thumbnail url="http://images.example.org/${package}/thumbnail.png" />
 				<snapshot url="http://images.example.org/${package}/screenshot.png" />
 			</spk>
