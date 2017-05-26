@@ -10,11 +10,12 @@ Tested on DSM v6.0/6.1. Try this on your own risk.
 # Building tips
 ```bash
 Qemu build with:
-./configure --prefix=/usr/local --target-list="x86_64-softmmu" \
---enable-{kvm,linux-aio,vhost-net,vnc,vnc-png,vnc-jpeg,guest-agent} \
---enable-{spice,coroutine-pool,libiscsi,libusb,curl,vde,libssh2,tpm} \
---enable-{modules,usb-redir,vhost-vsock,virglrenderer,replication,bzip2,rbd,attr,virtfs,vnc-sasl,vte} \
---audio-drv-list='oss alsa pa'
+./configure --prefix=/usr/local --target-list="x86_64-softmmu arm-softmmu" \
+--disable-gtk --disable-xen --enable-{kvm,linux-aio,vhost-net,vnc,vnc-png,vnc-jpeg,guest-agent} \
+--enable-{spice,coroutine-pool,libiscsi,libusb,curl,libssh2,tpm} \
+--enable-{modules,usb-redir,vhost-vsock,virglrenderer,replication,bzip2,rbd,attr,virtfs,vnc-sasl,tcmalloc,jemalloc,lzo} \
+--audio-drv-list='sdl oss alsa pa'
+
 
 ```
 
