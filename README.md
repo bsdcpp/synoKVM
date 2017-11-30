@@ -33,4 +33,4 @@ Libvirt build with:
 > 2. Devlepment tutorial: https://developer.synology.com/developer-guide/getting_started/index.html
     
 # 中文教程参考 
-  http://koolshare.cn/thread-76860-1-2.html
+  http://koolshare.cn/thread-95071-1-1.html
