@@ -33,7 +33,7 @@ Libvirt build with:
 > 2. Devlepment tutorial: https://developer.synology.com/developer-guide/getting_started/index.html
     
 # 中文教程参考 
-  http://koolshare.cn/thread-95071-1-1.html
-  关于软路由的部分介绍请参考我之前发的帖子：http://koolshare.cn/thread-76860-1-1.html
-  chroot玩虚拟机的参考：http://koolshare.cn/thread-76104-1-1.html
+  http://koolshare.cn/thread-95071-1-1.html\n
+  关于软路由的部分介绍请参考我之前发的帖子：http://koolshare.cn/thread-76860-1-1.html\n  
+  chroot玩虚拟机的参考：http://koolshare.cn/thread-76104-1-1.html\n
   有问题需要进一步讨论的加QQ讨论组：608151589
