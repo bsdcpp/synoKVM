@@ -5,7 +5,7 @@ Tested on DSM v6.0/6.1. Try this on your own risk.
 
 # Usage:
 > 1. Install spk first;
-> 2. use virsh or virt-manager to setup and manage.
+> 2. This spk carry a webvirtmgr web management, or you can use virsh or virt-manager to setup and manage.
 
 # Building tips
 ```bash
