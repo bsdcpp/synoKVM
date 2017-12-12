@@ -1,0 +1,13 @@
+{
+        ".url": {
+                "org.example.synokvm": {
+					"type": "url",
+					"allUsers": true,
+					"title": "synoKVM",
+					"icon": "images/icon_{0}.png",
+					"protocol": "http",
+					"url": "/",
+					"port": "8000"
+                }
+        }
+}

@@ -1,38 +1,32 @@
 #!/bin/sh
 # Copyright (C) 2000-2016 Synology Inc. All rights reserved.
+#SYNOPKG_PKGDEST=/synokvm
 
-p_dir()
-{
-	[ -d "$1" ] || mkdir -p $1
-}
+ln -sf $SYNOPKG_PKGDEST/synokvm /usr/local/
 
-p_dir /usr/local/bin
-p_dir /usr/local/sbin
-p_dir /usr/local/lib
-p_dir /usr/local/libexec
-p_dir /usr/local/share
-p_dir /usr/local/etc
-p_dir /usr/local/var
-p_dir /usr/local/etc/logrotate.d
-p_dir /usr/local/var/cache/
-p_dir /usr/local/var/lib/
-p_dir /usr/local/var/log
-p_dir /usr/local/var/run
+#echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/synokvm/lib' >> /root/.bashrc
+echo 'export PATH=$PATH:/usr/local/synokvm/bin' >> /root/.bashrc
 
+ln -sf $SYNOPKG_PKGDEST/synokvm/sbin/ldconfig* /sbin/
+ln -sf $SYNOPKG_PKGDEST/synokvm/sbin/ebtables /usr/sbin/ebtables
+ln -sf $SYNOPKG_PKGDEST/synokvm/sbin/dnsmasq /usr/sbin/dnsmasq
+ln -sf $SYNOPKG_PKGDEST/synokvm/sbin/pm-is-supported /usr/sbin/pm-is-supported
 
-ln -s $SYNOPKG_PKGDEST/bin/* /usr/local/bin
-ln -s $SYNOPKG_PKGDEST/sbin/* /usr/local/sbin
-ln -s $SYNOPKG_PKGDEST/lib/* /usr/local/lib/
-ln -s $SYNOPKG_PKGDEST/libexec/* /usr/local/libexec/
-ln -s $SYNOPKG_PKGDEST/share/* /usr/local/share/
+echo "/usr/local/synokvm/lib" >> /etc/ld.so.conf
+ldconfig &
 
-ln -s $SYNOPKG_PKGDEST/etc/libvirt /usr/local/etc/
-ln -s $SYNOPKG_PKGDEST/etc/sasl2 /usr/local/etc/
-ln -s $SYNOPKG_PKGDEST/etc/logrotate.d/libvirtd /usr/local/etc/logrotate.d/
+chmod +x /usr/local/synokvm/libexec/libvirt_leaseshelper
+cd /usr/local/synokvm/lib
+ln -sf libvirt.so.0.3009.0            libvirt.so.0
+ln -sf libvirt.so.0.3009.0            libvirt.so
+ln -sf libvirt-qemu.so.0.3009.0       libvirt-qemu.so.0 
+ln -sf libvirt-qemu.so.0.3009.0       libvirt-qemu.so
+ln -sf libvirt-lxc.so.0.3009.0        libvirt-lxc.so.0
+ln -sf libvirt-lxc.so.0.3009.0        libvirt-lxc.so
+ln -sf libvirt-admin.so.0.3009.0      libvirt-admin.so.0
+ln -sf libvirt-admin.so.0.3009.0      libvirt-admin.so
 
-ln -s $SYNOPKG_PKGDEST/var/cache/*  /usr/local/var/cache/
-ln -s $SYNOPKG_PKGDEST/var/lib/*    /usr/local/var/lib/
-ln -s $SYNOPKG_PKGDEST/var/log/*    /usr/local/var/log/
-ln -s $SYNOPKG_PKGDEST/var/run/*    /usr/local/var/run/
-echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib' >> /root/.profile
+export PYTHONPATH=$PYTHONPATH:/usr/local/synokvm/python2.7/site-packages
+python2 /usr/local/synokvm/webvirtmgr/autouser.py -u ${webvirtmgr_user} -p ${webvirtmgr_pass}
+
 exit 0

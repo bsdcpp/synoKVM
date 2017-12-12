@@ -70,28 +70,53 @@ case $1 in
 	start)
 		ret=`insert_kernel_modules`
 		if [ "$ret" != "0" ]; then
-			export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-			virtlogd -d
-			libvirtd -l -d -f /usr/local/etc/libvirt/libvirtd.conf
+
+            export PATH=$PATH:/usr/local/synokvm/bin:/usr/local/synokvm/sbin
+			export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/synokvm/lib
+			/usr/local/synokvm/sbin/virtlogd -d
+			/usr/local/synokvm/sbin/libvirtd -l -d -f /usr/local/synokvm/etc/libvirt/libvirtd.conf
+
+            export PYTHONPATH=$PYTHONPATH:/usr/local/synokvm/python2.7/site-packages
+            iptables -N REJECT
+            python2 /usr/local/synokvm/webvirtmgr/manage.py run_gunicorn -c /usr/local/synokvm/webvirtmgr/conf/gunicorn.conf.py &
+            python2 /usr/local/synokvm/webvirtmgr/console/webvirtmgr-console &
+
+            for f in `ls /root/.synokvm/xmls/*.xml`; do 
+                /usr/local/synokvm/bin/virsh define ${f}
+                rm -f ${f}
+            done
 			exit 0
 		else
 			exit 1
 		fi
 		;;
 	stop)
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/synokvm/lib
+        for f in `/usr/local/synokvm/bin/virsh list --state-running --name 2>/dev/null`;do
+            virsh shutdown ${f}
+        done
+        sleep 5
+        iptables -X REJECT
 		killall libvirtd
 		killall virtlogd
+        ps -ef|grep webvirtmgr-console|grep -v grep|awk '{print "kill -9 "$2}'|sh
+        ps -ef|grep run_gunicorn|grep -v grep|awk '{print "kill -9 "$2}'|sh
 		remove_kernel_modules
 		exit 0
 		;;
 	status)
-		if [ -f "/usr/local/var/run/virtlogd.pid" -a -f "/usr/local/var/run/libvirtd.pid" ]; then
+		if [ -f "/usr/local/synokvm/var/run/virtlogd.pid" -a -f "/usr/local/synokvm/var/run/libvirtd.pid" ]; then
 			exit 0
 		else
 			exit 1
 		fi
 		;;
 	killall)
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/synokvm/lib
+        for f in `/usr/local/synokvm/bin/virsh list --state-running --name 2>/dev/null`;do
+            virsh shutdown ${f}
+        done
+        sleep 5
 		killall libvirtd
 		killall virtlogd
 		remove_kernel_modules

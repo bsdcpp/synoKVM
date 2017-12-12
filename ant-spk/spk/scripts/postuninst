@@ -1,8 +1,15 @@
 #!/bin/sh
 # Copyright (C) 2000-2016 Synology Inc. All rights reserved.
 
-sed -i 's/export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:\/usr\/local\/lib//g' /root/.profile
+#sed -i '/^export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:\/usr\/local\/synokvm\/lib/d' /root/.bashrc
+sed -i '/^export PATH=$PATH:\/usr\/local\/synokvm\/bin/d' /root/.bashrc
 
-find /usr/local/ -type l -ls |grep synokvm |awk -F"->" '{print $1}'|awk '{print $NF}'|xargs rm -f
+rm -f /sbin/ldconfig*
+rm -f /usr/sbin/ebtables
+rm -f /usr/sbin/dnsmasq
+rm -f /usr/sbin/pm-is-supported
+
+#find /usr/local/ -type l -ls |grep synokvm |awk -F"->" '{print $1}'|awk '{print $NF}'|xargs rm -f
+rm -f /usr/local/synokvm
 
 exit 0

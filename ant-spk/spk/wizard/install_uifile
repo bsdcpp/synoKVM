@@ -1,0 +1,34 @@
+[{
+    "step_title": "Webvirtmgr User configuration",
+    "items": [{
+        "type": "textfield",
+        "desc": "Create Webvirtmgr manager",
+        "subitems": [{
+            "key": "webvirtmgr_user",
+            "desc": "Username",
+            "defaultValue": "admin",
+            "validator": {
+                "allowBlank": false,
+                "regex": {
+                    "expr": "/^[a-zA-Z0-9]+/",
+                    "errorText": "User name should be alphabet or numbers"
+                }
+            }
+        }]
+    }, {
+        "type": "password",
+        "desc": " ",
+        "subitems": [{
+            "key": "webvirtmgr_pass",
+            "desc": "Password",
+            "defaultValue": "",
+            "validator": {
+                "allowBlank": false,
+                "regex": {
+                    "expr": "/^[a-zA-Z0-9]+/",
+                    "errorText": "Password should be alphabet or numbers"
+                }
+            }
+        }]
+    }]
+}]

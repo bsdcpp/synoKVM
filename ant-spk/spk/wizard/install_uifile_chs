@@ -1,0 +1,34 @@
+[{
+    "step_title": "添加Webvirtmgr管理员帐户",
+    "items": [{
+        "type": "textfield",
+        "desc": "webvirtmgr超级管理员",
+        "subitems": [{
+            "key": "webvirtmgr_user",
+            "desc": "用户名",
+            "defaultValue": "admin",
+            "validator": {
+                "allowBlank": false,
+                "regex": {
+                    "expr": "/^[a-zA-Z0-9]+/",
+                    "errorText": "用户名必须是数字或者字母"
+                }
+            }
+        }]
+    }, {
+        "type": "password",
+        "desc": " ",
+        "subitems": [{
+            "key": "webvirtmgr_pass",
+            "desc": "密码",
+            "defaultValue": "",
+            "validator": {
+                "allowBlank": false,
+                "regex": {
+                    "expr": "/^[a-zA-Z0-9]+/",
+                    "errorText": "密码必须是数字或者字母"
+                }
+            }
+        }]
+    }]
+}]

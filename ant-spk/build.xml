@@ -2,15 +2,18 @@
 <project name="Ant SPK Task" basedir="." default="spk" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:syno="antlib:net.filebot.ant.spk">
 
 	<property name="package" value="synokvm" />
-	<property name="version" value="1.2" />
+	<property name="version" value="1.6" />
 
 	<target name="spk" description="Build SPK package">
 		<syno:spk destdir="dist" name="${package}" version="${version}" arch="x86_64" compression="gzip">
 			<info name="displayname" value="SynoKVM" />
-			<info name="description" value="libvirt, kvm for synology DSM" />
+			<info name="description" value="libvirt, qemu, webvirtmgr bundle for synology DSM." />
 
 			<info name="maintainer" value="bsdcpp@gmail.com" />
             <info name="maintainer_url" value="https://github.com/bsdcpp/synoKVM" />
+
+            <info name="dsmappname" value="org.example.synokvm" />
+            <info name="dsmuidir" value="dsm" />
 
 			<icon size="72" file="app/dsm/images/icon_72.png" />
 			<icon size="256" file="app/dsm/images/icon_256.png" />
@@ -18,7 +21,11 @@
 			<wizard dir="spk/wizard" />
 			<scripts dir="spk/scripts" filemode="755" />
 
-			<package dir="app" includes="**/*" filemode="755" />
+			<package dir="app" includes="**/*" filemode="644" />
+            <package dir="app" includes="**/sbin/*" filemode="755" />
+            <package dir="app" includes="**/bin/*" filemode="755" />
+            <package dir="app" includes="**/*.sh" filemode="755" />
+            <package dir="app" includes="**/.secret_key_store" filemode="600" />
 
 			<codesign keyid="D545C93D" secring="gpg/secring.gpg" password="" />
 		</syno:spk>
