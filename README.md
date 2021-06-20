@@ -1,3 +1,6 @@
+# Warning
+This project has been abandoned and no further support will be given.
+
 # synokvm
 Libvirt, Qemu for Synology DSM X86 platform(with kvm support).
 
